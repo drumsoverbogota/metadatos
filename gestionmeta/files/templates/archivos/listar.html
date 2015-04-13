@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      {% load staticfiles %}
+      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+  </head> 
+  <body>
+    <h1>Blongo - Tags</h1>
+
+
+
+<table align="centar" style="width:100%">
+    <tr>
+        {% for t in tags%}
+        <th>{{t.tag}}</th>
+        {% endfor %}
+        <th>Editar </th>
+    </tr>
+    {% for arch in archivos%}
+    <tr>
+        {% for t in tags%}
+        <td>
+            {{ arch.tags|get_item:t.tag }}
+        </td>
+        
+        {% endfor %}
+        <td>
+            <form method="get" action="/archivos/editar/">
+
+                <input type="hidden" name="a_id" value="{{arch.id}}">
+                <input type="hidden" name="c_id" value="{{id}}">
+                <input type="submit" value="Editar">
+            </form>
+        </td>
+    </tr>
+    
+    {% endfor %}
+    
+</table>
+
+    
+    <form method="post" action="/archivos/crear/">
+        {% csrf_token %}
+
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="submit" value="Añadir">
+    </form>
+    
+    <a href="/archivos/">Volver atrás</a>
+  </body>
+</html>

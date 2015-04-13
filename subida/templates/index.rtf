@@ -1,0 +1,44 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1344\cocoasubrtf720
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa321
+
+\f0\b\fs48 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Blongo\
+\pard\pardeftab720
+
+\b0\fs24 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \{% csrf_token %\}\
+\pard\tx220\tx720\pardeftab720\li720\fi-720
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\'95	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720
+\ls1\ilvl0
+\f1\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\'95	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2           
+\f0\fs24 \cb1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0  \
+\pard\tx220\tx720\pardeftab720\li720\fi-720
+\ls1\ilvl0\cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\'95	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720
+\cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \{% for post in Posts %\}\
+\pard\pardeftab720\sa298
+
+\b\fs36 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \{\{ post.title \}\} \
+\pard\pardeftab720\sa240
+
+\b0\fs24 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \{\{ post.last_update \}\}\
+\{\{ post.content \}\}\
+\pard\pardeftab720
+\cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \
+\
+\{% endfor %\} }

@@ -1,0 +1,27 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+      {% load staticfiles %}
+      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+  </head> 
+  <body>
+    <h1>Metadatos</h1>
+
+    Seleccione un corpus
+    
+    {% for corpus in Corpus %}
+    <h2> {{ corpus.nombre }} </h2>
+
+    <form method="get" action="/archivos/listar">
+        <input type="hidden" name="id" value="{{ corpus.id }}">
+        <input type="submit" name="" value="Editar etiquetas">
+    </form>
+
+    
+    {% endfor %}
+    
+    
+    <a href="/">Volver atrás</a>
+  </body>
+</html>

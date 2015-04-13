@@ -1,0 +1,31 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+      {% load staticfiles %}
+    <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+  </head> 
+  <body>
+    <h1>Blongo</h1>
+
+
+      <ul>
+          <li>
+              <a href="/corpus/create/">Crear</a>
+          </li>
+      </ul>
+      {% for corp in Corpus %}
+      <h2> {{ corp.nombre }} </h2>
+      <form method="get" action="/corpus/tags">
+        <input type="hidden" name="id" value="{{ corp.id }}">
+        <input type="submit" name="" value="Editar etiquetas">
+      </form>
+      <form method="get" action="/corpus/delete">
+        <input type="hidden" name="id" value="{{corp.id}}">
+        <input type="submit" value="Borrar">
+      </form>
+ 
+      {% endfor %}
+          <a href="/">Volver atrás</a>
+  </body>
+</html>

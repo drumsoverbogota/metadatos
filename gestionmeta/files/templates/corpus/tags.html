@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      {% load staticfiles %}
+      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+  </head> 
+  <body>
+    <h1>Blongo - Tags</h1>
+    {% for tags in Tags%}
+
+    <h2> {{ tags.tag}} </h2>
+    
+    <form method="post" action="/corpus/tags_delete/">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="hidden" name="tag_id" value="{{tags.id}}">
+        <input type="submit" value="Delete">
+        
+
+    </form>
+ 
+    {% endfor %}
+    
+    <form method="post" action="/corpus/tags_add/">
+        {% csrf_token %}
+        <ul>
+            <input type="hidden" name="id" value="{{id}}">
+            <li>
+                <input type="text" name="tag" placeholder="tag" required>
+            </li>
+            <li>
+                <input type="text" name="descripcion" placeholder="des" required>
+            </li>
+            <li>
+                <input type="submit" value="Add Post">
+            </li>
+            
+        </ul>
+    </form>
+    
+    <a href="/corpus/">Volver atrás</a>
+  </body>
+</html>

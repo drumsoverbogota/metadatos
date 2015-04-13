@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load staticfiles %}
+        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+            </head>
+    <body>
+        <h1>Borrar</h1>
+        <form method="post" action="/archivos/borrar/">
+            {% csrf_token %}
+            <input type="hidden" name="a_id" value="{{a_id}}">
+            <input type="hidden" name="c_id" value="{{c_id}}">
+                <p>¿Está seguro de borrar esta entrada?</p>
+                <input type="submit" value="Borrar">
+        </form>
+        <form method="post" action="/archivos/listar/">
+            {% csrf_token %}
+            <input type="hidden" name="c_id" value="{{c_id}}">
+            <input type="submit" value="Cancelar">
+        </form>
+    </body>
+</html>
