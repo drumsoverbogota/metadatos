@@ -1,15 +1,14 @@
 from mongoengine import *
 
 class Corpus(Document):
-    nombre = StringField(max_length=120, required=True)
-    descripcion = StringField(max_length=300)
+    nombre = StringField()
+    tags = ListField(StringField())
 
 class Tag(Document):
-    tag = StringField()
-    descripcion = StringField()
+    nombre = StringField()
+    tags = ListField(StringField())
     corpus = ReferenceField(Corpus)
+    meta = {'allow_inheritance': True}
 
-class Subtag(Document):
-    subtag = StringField()
-    descripcion = StringField()
-    tag = ReferenceField(Tag)
+class Subtag(Tag):
+    ptag = ReferenceField(Tag)

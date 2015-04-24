@@ -7,6 +7,8 @@ urlpatterns = patterns('',
     url(r'^create/', 'corpus.views.create', name='create'),
     url(r'^delete/', 'corpus.views.delete', name='delete'),
     url(r'^tags/', 'corpus.views.tags', name='tags'),
+    url(r'^subtags/', 'corpus.views.subtags', name='subtags'),                       
     url(r'^tags_add/', 'corpus.views.tags_add', name='tags_add'),
+    url(r'^subtags_add/', 'corpus.views.subtags_add', name='subtags_add'),                       
     url(r'^tags_delete/', 'corpus.views.tags_delete', name='tags_delete'),                       
 )

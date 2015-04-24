@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load staticfiles %}
+        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+            </head>
+    <body>
+        <h1>Tags</h1>
+        
+        
+        <ul>
+            
+            {% for tags in Tags%}
+            <li>
+                {{ tags}}
+                
+                <form method="post" action="/corpus/tags_delete/">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{id}}">
+                        <input type="hidden" name="tag_id" value="{{tags}}">
+                            <input type="submit" value="Delete">
+                                
+                                
+                                </form>
+            </li>
+            
+            
+            {% endfor %}
+        </ul>
+        <form method="post" action="/corpus/tags_add/">
+            {% csrf_token %}
+            
+            <input type="hidden" name="id" value="{{id}}">
+                
+                <input type="text" name="tag" placeholder="tag" required>
+                    
+                    <input type="submit" value="Agregar etiqueta">
+                        
+                        </form>
+        
+        <form method="post" action="/corpus/tags_add/">
+            {% csrf_token %}
+            
+            <input type="hidden" name="id" value="{{id}}">
+                
+                <input type="text" name="tag" placeholder="tag" required>
+                    
+                    <input type="submit" value="Agregar etiqueta">
+                        
+        </form>
+        
+        
+        <a href="/corpus/">Volver atrás</a>
+    </body>
+</html>
