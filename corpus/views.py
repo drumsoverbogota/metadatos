@@ -30,19 +30,22 @@ def tags(request):
     corp = Corpus.objects(id=id)[0]
     template = 'corpus/tags.html'
     tags_c = corp.tags
-    params = {'Tags': tags_c,'id': id}
+    subtags_c = Tag.objects(corpus=corp)
+    params = {'Tags': tags_c,'Subtags':subtags_c ,'id': id}
     return render_to_response(template, params, context_instance=RequestContext(request))
 
 
 def subtags(request):
     id = eval("request." + request.method + "['id']")
-    template = 'corpus/subtags.html'
+
     if request.method == 'GET':
-        id = eval("request." + request.method + "['id']")
-        corp = Corpus.objects(id=id)[0]
-        template = 'corpus/tags.html'
+        
+        id_tag = request.GET['id_tag']
+
         tags_c = Tag.objects(corpus=corp)
-        params = {'Tags': tags_c,'id': id}
+
+        params = {'Tags': tags_c,'id': id,'id_tag':id_tag}
+        template = 'corpus/subtags.html'
 
     elif request.method == 'POST':
         corp = Corpus.objects(id=id)[0]
@@ -51,9 +54,10 @@ def subtags(request):
         new_tag = Tag(nombre=n_tag,corpus=corp)
         new_tag.save()
         
-        tags_c = new_tag.tags
-        
-        params = {'Tags': tags_c,'id_corp': id, 'id_tag':new_tag.id}
+        tags_c = corp.tags
+        subtags_c = Tag.objects(corpus=corp)
+        params = {'Tags': tags_c,'Subtags':subtags_c ,'id': id}
+        template = 'corpus/tags.html'
 
     return render_to_response(template, params, context_instance=RequestContext(request))
 

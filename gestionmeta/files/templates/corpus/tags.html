@@ -26,6 +26,25 @@
 
  
     {% endfor %}
+    
+    
+    {% for tags in Subtags%}
+    <li>
+        <a href="/corpus/subtags_add?id={{id}}&id_tag={{tags.id}}">{{ tags.nombre}}</a>
+        
+        <form method="post" action="/corpus/tags_delete/">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="tag_id" value="{{tags}}">
+                    <input type="submit" value="Delete">
+                        
+                        
+                        </form>
+    </li>
+    
+    
+    {% endfor %}
+    
     </ul>
     <form method="post" action="/corpus/tags_add/">
         {% csrf_token %}
