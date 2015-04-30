@@ -7,7 +7,6 @@
   <body>
     <h1>Tags</h1>
     
-    
     <ul>
     
     {% for tags in Tags%}
@@ -19,13 +18,8 @@
         <input type="hidden" name="id" value="{{id}}">
         <input type="hidden" name="tag_id" value="{{tags}}">
         <input type="submit" value="Delete">
-        
-
     </form>
     </li>
-
-
- 
     {% endfor %}
     </ul>
 
@@ -44,19 +38,11 @@
             <input type="hidden" name="tag_id" value="{{tags}}">
             <input type="hidden" name="isfile" value="True">
             <input type="submit" value="Delete">
-                            
-                            
         </form>
         </li>
-        
-        
-        
         {% endfor %}
     </ul>
-    
-    
-    
-    
+
     <ul>
     
     {% for tags in Subtags%}
@@ -69,12 +55,8 @@
             <input type="hidden" name="subtag" value="True">
             <input type="hidden" name="tag_id" value="{{tags.id}}">
             <input type="submit" value="Delete">
-                        
-                        
         </form>
     </li>
-    
-    
     {% endfor %}
     
     </ul>

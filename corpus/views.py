@@ -82,20 +82,28 @@ def tags_add(request):
 def subtags_add(request):
     
     id = eval("request." + request.method + "['id']")
+    tag_id = eval("request." + request.method + "['id_tag']")
     corp = Corpus.objects(id=id)[0]
-
+    tag = Tag.objects(id=tag_id)[0]
+    
     if request.method == 'GET':
-        print(id)
-        template = 'corpus/tags.html'
+        
+        template = 'corpus/subtags.html'
+
     elif request.method == 'POST':
         
         n_tag = request.POST['tag']
-        corp.tags.append(n_tag)
-        corp.save()
-        template = 'corpus/tags.html'
+
+        if request.POST.get('archivo',False) is not False:
+            tag.tags_f.append(n_tag)
+        else:
+            tag.tags.append(n_tag)
+        
+        tag.save()
+        template = 'corpus/subtags.html'
         corp.reload()
-    #url = reverse('corpus:tags', args = {'Tags': Corpus.objects(id=id)[0].tags,'id': id})
-    return render_to_response(template, {'Tags': corp.tags , 'id': id}, context_instance=RequestContext(request))
+    params = {'Tags': tag.tags , 'Tagsf': tag.tags_f, 'id': id, 'id_tag' : tag_id}
+    return render_to_response(template, params, context_instance=RequestContext(request))
 
 
 def delete(request):
@@ -139,4 +147,31 @@ def tags_delete(request):
 
     subtags_c = Tag.objects(corpus=corp)
 
+    return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id': id}, context_instance=RequestContext(request))
+
+def subtags_delete(request):
+    id = request.POST['id']
+    tag_id = request.POST['tag_id']
+    corp = Corpus.objects(id=id)[0]
+    if request.POST.get('subtag',False) is False:
+        if request.POST.get('isfile',False) is not False:
+            p = corp.tags_f
+        else:
+            p = corp.tags
+        for tag in p:
+            if tag == tag_id:
+                p.remove(tag)
+    else:
+        
+        tag = Tag.objects(id=tag_id)
+        tag.delete()
+    
+    #corp.update(pull__tags=tag)
+    corp.save()
+    
+    template = 'corpus/tags.html'
+    corp.reload()
+
+    subtags_c = Tag.objects(corpus=corp)
+    
     return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id': id}, context_instance=RequestContext(request))
