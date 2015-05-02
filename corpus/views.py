@@ -44,7 +44,7 @@ def subtags(request):
 
         tags_c = Tag.objects(corpus=corp)
 
-        params = {'Tags': tags_c,'id': id,'id_tag':id_tag}
+        params = {'Tags': tags_c,'id_tag':id_tag}
         template = 'corpus/subtags.html'
 
     elif request.method == 'POST':
@@ -81,11 +81,9 @@ def tags_add(request):
 
 def subtags_add(request):
     
-    id = eval("request." + request.method + "['id']")
     tag_id = eval("request." + request.method + "['id_tag']")
-    corp = Corpus.objects(id=id)[0]
     tag = Tag.objects(id=tag_id)[0]
-    
+    print(tag.corpus.id)
     if request.method == 'GET':
         
         template = 'corpus/subtags.html'
@@ -101,8 +99,8 @@ def subtags_add(request):
         
         tag.save()
         template = 'corpus/subtags.html'
-        corp.reload()
-    params = {'Tags': tag.tags , 'Tagsf': tag.tags_f, 'id': id, 'id_tag' : tag_id}
+
+    params = {'Tags': tag.tags , 'Tagsf': tag.tags_f, 'id_tag': tag_id, 'id_corp' :tag.corpus.id}
     return render_to_response(template, params, context_instance=RequestContext(request))
 
 
@@ -134,6 +132,7 @@ def tags_delete(request):
         for tag in p:
             if tag == tag_id:
                 p.remove(tag)
+                break
     else:
         
         tag = Tag.objects(id=tag_id)
@@ -150,28 +149,29 @@ def tags_delete(request):
     return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id': id}, context_instance=RequestContext(request))
 
 def subtags_delete(request):
-    id = request.POST['id']
-    tag_id = request.POST['tag_id']
-    corp = Corpus.objects(id=id)[0]
+    id_tag = request.POST['id_tag']
+    d_tag = request.POST['tag']
+    tag = Tag.objects(id=id_tag)[0]
+    
     if request.POST.get('subtag',False) is False:
         if request.POST.get('isfile',False) is not False:
-            p = corp.tags_f
+            p = tag.tags_f
         else:
-            p = corp.tags
-        for tag in p:
-            if tag == tag_id:
-                p.remove(tag)
+            p = tag.tags
+        for tags in p:
+            if tags == d_tag:
+                p.remove(tags)
+                break
     else:
         
         tag = Tag.objects(id=tag_id)
         tag.delete()
     
     #corp.update(pull__tags=tag)
-    corp.save()
+    tag.save()
     
-    template = 'corpus/tags.html'
-    corp.reload()
+    template = 'corpus/subtags.html'
 
-    subtags_c = Tag.objects(corpus=corp)
+
     
-    return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id': id}, context_instance=RequestContext(request))
+    return render_to_response(template, {'Tags': tag.tags , 'Tagsf':tag.tags_f,'id_tag': id_tag,'id_corp':tag.corpus.id}, context_instance=RequestContext(request))

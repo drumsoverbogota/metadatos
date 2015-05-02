@@ -47,7 +47,7 @@
     
     {% for tags in Subtags%}
     <li>
-        <a href="/corpus/subtags_add?id={{id}}&id_tag={{tags.id}}">{{ tags.nombre}}</a>
+        <a href="/corpus/subtags_add?id_tag={{tags.id}}">{{ tags.nombre}}</a>
         
         <form method="post" action="/corpus/tags_delete/">
             {% csrf_token %}

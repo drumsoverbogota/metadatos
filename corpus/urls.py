@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^subtags/', 'corpus.views.subtags', name='subtags'),                       
     url(r'^tags_add/', 'corpus.views.tags_add', name='tags_add'),
     url(r'^subtags_add/', 'corpus.views.subtags_add', name='subtags_add'),                       
-    url(r'^tags_delete/', 'corpus.views.tags_delete', name='tags_delete'),                       
+    url(r'^tags_delete/', 'corpus.views.tags_delete', name='tags_delete'),
+    url(r'^subtags_delete/', 'corpus.views.subtags_delete', name='tags_delete'),                                              
 )

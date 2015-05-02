@@ -13,12 +13,12 @@
             <li>
                 {{ tags}}
                 
-                <form method="post" action="/corpus/tags_delete/">
+                <form method="post" action="/corpus/subtags_delete/">
                     {% csrf_token %}
-                    <input type="hidden" name="id" value="{{id}}">
-                        <input type="hidden" name="tag_id" value="{{tags}}">
-                            <input type="submit" value="Delete">
-                                </form>
+                    <input type="hidden" name="id_tag" value="{{id_tag}}">
+                    <input type="hidden" name="tag" value="{{tags}}">
+                    <input type="submit" value="Delete">
+                </form>
             </li>
             {% endfor %}
         </ul>
@@ -34,11 +34,11 @@
                 
                 <form method="post" action="/corpus/subtags_delete/">
                     {% csrf_token %}
-                    <input type="hidden" name="id" value="{{id}}">
-                        <input type="hidden" name="tag_id" value="{{tags}}">
-                            <input type="hidden" name="isfile" value="True">
-                                <input type="submit" value="Delete">
-                                    </form>
+                    <input type="hidden" name="id_tag" value="{{id_tag}}">
+                    <input type="hidden" name="tag" value="{{tags}}">
+                    <input type="hidden" name="isfile" value="True">
+                    <input type="submit" value="Delete">
+                    </form>
             </li>
             {% endfor %}
         </ul>
@@ -47,7 +47,6 @@
         <form method="post" action="/corpus/subtags_add/">
             {% csrf_token %}
             
-            <input type="hidden" name="id" value="{{id}}">
             <input type="hidden" name="id_tag" value="{{id_tag}}">
             <input type="text" name="tag" placeholder="tag" required>
             <input type="checkbox" name="archivo" value="True">
@@ -56,16 +55,7 @@
                             
         </form>
         
-        <form method="post" action="/corpus/subtags/">
-            {% csrf_token %}
-            
-            <input type="hidden" name="id" value="{{id}}">
-            <input type="text" name="tag" placeholder="tag" required>
-            <input type="submit" value="Agregar etiqueta compuesta">
-                        
-        </form>
         
-        
-        <a href="/corpus/">Volver atrás</a>
+        <a href="/corpus/tags/?id={{id_corp}}">Volver atrás</a>
     </body>
 </html>
