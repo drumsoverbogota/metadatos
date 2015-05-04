@@ -7,7 +7,7 @@ from corpus.models import *
 # Create your views here.
 def index(request):
     # Get all posts from DB
-    corp = Corpus.objects
+    corp = ModeloCorpus.objects
 
     return render_to_response('corpus/index.html', {'Corpus': corp},
                               context_instance=RequestContext(request))
@@ -16,18 +16,18 @@ def create(request):
     # Get all posts from DB
     if request.method == 'POST':
         nombre = request.POST['nombre']
-        corp = Corpus(nombre=nombre)
+        corp = ModeloCorpus(nombre=nombre)
         corp.save()
         template = 'corpus/index.html'
     else:
         template = 'corpus/create.html'
-    corp = Corpus.objects
+    corp = ModeloCorpus.objects
     return render_to_response(template, {'Corpus': corp},context_instance=RequestContext(request))
 
 
 def tags(request):
     id = eval("request." + request.method + "['id']")
-    corp = Corpus.objects(id=id)[0]
+    corp = ModeloCorpus.objects(id=id)[0]
     template = 'corpus/tags.html'
     tags_c = corp.tags
     subtags_c = Tag.objects(corpus=corp)
@@ -48,7 +48,7 @@ def subtags(request):
         template = 'corpus/subtags.html'
 
     elif request.method == 'POST':
-        corp = Corpus.objects(id=id)[0]
+        corp = ModeloCorpus.objects(id=id)[0]
         n_tag = request.POST['tag']
         
         new_tag = Tag(nombre=n_tag,corpus=corp)
@@ -64,7 +64,7 @@ def subtags(request):
 def tags_add(request):
     
     id = request.POST['id']
-    corp = Corpus.objects(id=id)[0]
+    corp = ModeloCorpus.objects(id=id)[0]
     
     if request.method == 'POST':
         
@@ -107,12 +107,12 @@ def subtags_add(request):
 def delete(request):
     id = eval("request." + request.method + "['id']")
     if request.method == 'POST':
-        corp = Corpus.objects(id=id)[0]
+        corp = ModeloCorpus.objects(id=id)[0]
         tags_c = Tag.objects(corpus=corp)
         tags_c.delete()
         corp.delete()
         template = 'corpus/index.html'
-        params = {'Corpus': Corpus.objects}
+        params = {'Corpus': ModeloCorpus.objects}
     elif request.method == 'GET':
         template = 'corpus/delete.html'
         params = { 'id': id }
@@ -123,7 +123,7 @@ def delete(request):
 def tags_delete(request):
     id = request.POST['id']
     tag_id = request.POST['tag_id']
-    corp = Corpus.objects(id=id)[0]
+    corp = ModeloCorpus.objects(id=id)[0]
     if request.POST.get('subtag',False) is False:
         if request.POST.get('isfile',False) is not False:
             p = corp.tags_f

@@ -12,10 +12,16 @@
 <table align="centar" style="width:100%">
     <tr>
         {% for t in tags%}
-        <th>{{t.tag}}</th>
+        <th>{{t}}</th>
+        {% endfor %}
+        {% for t in s_tags%}
+        <th>{{t.nombre}}</th>
         {% endfor %}
         <th>Editar </th>
     </tr>
+    
+    {% comment %}
+    
     {% for arch in archivos%}
     <tr>
         {% for t in tags%}
@@ -35,7 +41,7 @@
     </tr>
     
     {% endfor %}
-    
+    {% endcomment %}
 </table>
 
     

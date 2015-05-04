@@ -20,29 +20,30 @@ def get_item(dictionary, key):
 
 def index(request):
 
-    corp = Corpus.objects
+    corp = ModeloCorpus.objects
     return render_to_response('archivos/index.html', {'Corpus': corp},
                               context_instance=RequestContext(request))
 
 def listar(request):
 
     id = eval("request." + request.method + "['id']")
-    corp = Corpus.objects(id=id)[0]
-    tags = Tag.objects(corpus=corp)
-    arch = Archivo.objects(corpus=corp)
-    for i in arch:
-        print(i.archivo)
-    params = {'id' : id , 'archivos': arch, 'tags': tags}
+    mod = ModeloCorpus.objects(id=id)[0]
+    sesiones = Sesiones.objects(corpus=mod)
+    anidados = Anidados.objects(corpus=mod)
+    
+    subtags = Tag.objects(corpus=mod)
+    params = {'id' : id , 'sesiones': sesiones, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
 def crear(request):
 
     id = request.POST['id']
-    corp = Corpus.objects(id=id)[0]
-    tags = Tag.objects(corpus=corp)
+    mod = ModeloCorpus.objects(id=id)[0]
+    tags = mod.tags
+    tags_f = mod.tags
     form = UploadFileForm()
-    params = {'id' : id , 'tags' : tags,'form': form}
+    params = {'id' : id , 'tags' : mod.tags, 'tags_f' : mod.tags_f,'form': form}
     return render_to_response('archivos/create.html',params,
                               context_instance=RequestContext(request))
 
@@ -52,7 +53,7 @@ def editar(request):
         c_id = eval("request." + request.method + "['c_id']")
         
         arch = Archivo.objects(id=a_id)[0]
-        corp = Corpus.objects(id=c_id)[0]
+        corp = ModeloCorpus.objects(id=c_id)[0]
         tags = Tag.objects(corpus=corp)
         
         params = {'arch': arch, 'tags': tags, 'c_id': c_id}
@@ -63,7 +64,7 @@ def editar(request):
         a_id = request.POST['a_id']
         c_id = request.POST['c_id']
 
-        corp = Corpus.objects(id=c_id)[0]
+        corp = ModeloCorpus.objects(id=c_id)[0]
         arch = Archivo.objects(id=a_id)[0]
         tags = Tag.objects(corpus=corp)
 
@@ -94,7 +95,7 @@ def borrar(request):
         a_id = request.POST['a_id']
         c_id = request.POST['c_id']
         
-        corp = Corpus.objects(id=c_id)[0]
+        corp = ModeloCorpus.objects(id=c_id)[0]
         archivo = Archivo.objects(id=a_id)[0]
         tags = Tag.objects(corpus=corp)
 
@@ -117,8 +118,8 @@ def borrar(request):
 def guardar(request):
 
     id = request.POST['id']
-    corp = Corpus.objects(id=id)[0]
-    tags = Tag.objects(corpus=corp)
+    corp = ModeloCorpus.objects(id=id)[0]
+    tags = corp.tags
 
     form = UploadFileForm(request.POST, request.FILES)
 
@@ -141,6 +142,35 @@ def guardar(request):
     params = {'id' : id , 'archivos': arch, 'tags': tags}
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
+
+def guardar_s(request):
+    
+    id = request.POST['id']
+    corp = ModeloCorpus.objects(id=id)[0]
+    tags = Tag.objects(corpus=corp)
+    
+    form = UploadFileForm(request.POST, request.FILES)
+    
+    nombre = id + '_' + uuid.uuid4().hex + '.mp3'
+    total = DIR_FILES + nombre
+    d = {}
+    if form.is_valid():
+        handle_uploaded_file(request.FILES['file'],total)
+    else:
+        print('Man is the bastard')
+    for etiqueta in tags:
+        d[etiqueta.tag] = request.POST.get(etiqueta.tag,False)
+
+    archivo = Archivo(archivo=nombre,tags=d,corpus=corp)
+    archivo.save()
+
+
+arch = Archivo.objects(corpus=corp)
+    
+    params = {'id' : id , 'archivos': arch, 'tags': tags}
+    return render_to_response('archivos/listar.html', params,
+                              context_instance=RequestContext(request))
+
 
 def delete_file(nombre):
     os.remove(nombre)

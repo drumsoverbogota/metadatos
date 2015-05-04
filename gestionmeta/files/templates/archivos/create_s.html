@@ -16,7 +16,9 @@
                     <input type="text" name="{{tag}}" placeholder="{{tag}}" required>
                 </li>
                 {% endfor %}
-
+                <li>
+                    {{form.file}}
+                </li>
                 <li>
                     <input type="hidden" name="id" value="{{id}}">
                     <input type="submit" value="Add Post">
