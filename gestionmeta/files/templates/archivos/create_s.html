@@ -8,7 +8,7 @@
     <body>
         <h1>Añadir nuevo archivo</h1>
     
-        <form enctype="multipart/form-data" method="post" action="/archivos/guardar/">
+        <form enctype="multipart/form-data" method="post" action="/archivos/guardar_s/">
             {% csrf_token %}
             <ul>
                 {% for tag in tags %}
@@ -17,13 +17,23 @@
                 </li>
                 {% endfor %}
                 <li>
-                    {{form.file}}
-                </li>
-                <li>
-                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="hidden" name="m_id" value="{{m_id}}">
+                    <input type="hidden" name="t_id" value="{{t_id}}">
+                    <input type="hidden" name="s_id" value="{{s_id}}">
                     <input type="submit" value="Add Post">
                 </li>
             </ul>
         </form>
+        
+    {% if anidados %}
+        También puede seleccionar uno creado anteriormente
+        <br>
+        {% for an in anidados %}
+            <a href="/archivos/add_s/?s_id={{s_id}}&t_id={{t_id}}&a_id={{an.id}}&m_id={{m_id}}">{{an.tags|get_item:nombre}}</a>
+            <br>
+        {% endfor %}
+    {% endif %}
+    
+    
       </body>
 </html>

@@ -9,7 +9,7 @@
 
 
 
-<table align="centar" style="width:100%">
+<table border="1" align="centar" style="width:100%">
     <tr>
         {% for t in tags%}
         <th>{{t}}</th>
@@ -20,35 +20,63 @@
         <th>Editar </th>
     </tr>
     
-    {% comment %}
     
-    {% for arch in archivos%}
+    
+    {% for arch in sesiones%}
     <tr>
         {% for t in tags%}
         <td>
-            {{ arch.tags|get_item:t.tag }}
+            <center>
+                {{ arch.tags|get_item:t }}
+            </center>
         </td>
         
+        {% endfor %}
+        
+        {% for t in s_tags%}
+
+        <td>
+            
+            <center>
+            
+            {% for refa in arch.refa|get_item:t.nombre%}
+                {% for an in anidados%}
+                    {% if refa == an.id%}
+                        {{an.tags|get_item:t.main_tag}}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            
+            
+                <form method="post" action="/archivos/crear/">
+                    {% csrf_token %}
+                    <input type="hidden" name="m_id" value="{{m_id}}">
+                    <input type="hidden" name="s_id" value="{{arch.id}}">
+                    <input type="hidden" name="subtag" value="{{t.id}}">
+                    <input type="submit" value="Añadir">
+                </form>
+            </center>
+        </td>
         {% endfor %}
         <td>
             <form method="get" action="/archivos/editar/">
 
                 <input type="hidden" name="a_id" value="{{arch.id}}">
-                <input type="hidden" name="c_id" value="{{id}}">
+                <input type="hidden" name="m_id" value="{{m_id}}">
                 <input type="submit" value="Editar">
             </form>
         </td>
     </tr>
     
     {% endfor %}
-    {% endcomment %}
 </table>
 
     
     <form method="post" action="/archivos/crear/">
         {% csrf_token %}
 
-        <input type="hidden" name="id" value="{{id}}">
+        <input type="hidden" name="m_id" value="{{m_id}}">
         <input type="submit" value="Añadir">
     </form>
     

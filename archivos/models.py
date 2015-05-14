@@ -3,11 +3,11 @@ from corpus.models import *
 
 
 class Sesiones(Document):
-    id = StringField(max_length=120, required=True)
     tags = DictField()
+    refa = DictField()
     corpus = ReferenceField(ModeloCorpus)
 
 class Anidados(Document):
-    id = StringField(max_length=120, required=True)
     tags = DictField()
     corpus = ReferenceField(ModeloCorpus)
+    ref = ReferenceField(Tag)

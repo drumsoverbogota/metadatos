@@ -7,6 +7,7 @@ class ModeloCorpus(Document):
 
 class Tag(Document):
     nombre = StringField()
+    main_tag = StringField()
     tags = ListField(StringField())
     tags_f = ListField(StringField())
     corpus = ReferenceField(ModeloCorpus)

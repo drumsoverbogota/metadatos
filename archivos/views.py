@@ -26,56 +26,168 @@ def index(request):
 
 def listar(request):
 
-    id = eval("request." + request.method + "['id']")
+    id = eval("request." + request.method + "['m_id']")
     mod = ModeloCorpus.objects(id=id)[0]
     sesiones = Sesiones.objects(corpus=mod)
     anidados = Anidados.objects(corpus=mod)
     
     subtags = Tag.objects(corpus=mod)
-    params = {'id' : id , 'sesiones': sesiones, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+    params = {'m_id' : id , 'sesiones': sesiones, 'anidados' : anidados, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
 def crear(request):
 
-    id = request.POST['id']
+    id = request.POST['m_id']
+    mod = ModeloCorpus.objects(id=id)[0]
+    if request.POST.get('subtag',False) is False:
+        tags = mod.tags
+        tags_f = mod.tags_f
+        params = {'m_id' : id , 'tags' : tags, 'tags_f' : tags_f}
+        template = 'archivos/create.html'
+    else:
+        t_id = request.POST['subtag']
+        s_id = request.POST['s_id']
+
+        subtag = Tag.objects(id=t_id)[0]
+        tags = subtag.tags
+        tags_f = subtag.tags_f
+        anidados = Anidados.objects(ref=subtag)
+
+        params = {'m_id' : id ,'t_id': t_id, 's_id':s_id, 'tags' : tags, 'tags_f' : tags_f,'anidados': anidados,'nombre':subtag.main_tag}
+        template = 'archivos/create_s.html'
+    return render_to_response(template,params,
+                              context_instance=RequestContext(request))
+
+def guardar(request):
+
+    id = request.POST['m_id']
     mod = ModeloCorpus.objects(id=id)[0]
     tags = mod.tags
-    tags_f = mod.tags
-    form = UploadFileForm()
-    params = {'id' : id , 'tags' : mod.tags, 'tags_f' : mod.tags_f,'form': form}
-    return render_to_response('archivos/create.html',params,
+    tags_f = mod.tags_f
+    subtags = Tag.objects(corpus=mod)
+    d = {}
+    
+    for etiqueta in tags:
+        d[etiqueta] = request.POST.get(etiqueta,False)
+
+    sesion = Sesiones(tags=d,corpus=mod)
+    sesion.save()
+    
+    
+    sesiones = Sesiones.objects(corpus=mod)
+    anidados = Anidados.objects(corpus=mod)
+    
+    params = {'m_id' : id , 'sesiones': sesiones,'anidados': anidados , 'tags': tags, 'tagsf': tags_f, 's_tags': subtags }
+    return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
+
+def guardar_s(request):
+    
+    id = request.POST['m_id']
+    s_id = request.POST['s_id']
+    t_id = request.POST['t_id']
+
+
+    mod = ModeloCorpus.objects(id=id)[0]
+    subtag = Tag.objects(id=t_id)[0]
+    sesion = Sesiones.objects(id=s_id)[0]
+    
+    tags = subtag.tags
+    tags_f = subtag.tags_f
+    
+    d = {}
+    
+    for etiqueta in tags:
+        d[etiqueta] = request.POST.get(etiqueta,False)
+
+    anidado = Anidados(ref=subtag,tags=d,corpus=mod)
+    anidado.save()
+    
+    if subtag.nombre not in sesion.refa.keys():
+        sesion.refa[subtag.nombre] = []
+    sesion.refa[subtag.nombre].append(anidado.id)
+
+
+    sesion.save()
+
+    sesiones = Sesiones.objects(corpus=mod)
+    subtags = Tag.objects(corpus=mod)
+    anidados = Anidados.objects(corpus=mod)
+
+    tags = mod.tags
+    tags_f = mod.tags_f
+    params = {'m_id' : id , 'sesiones': sesiones,'anidados':anidados, 'tags': tags, 'tagsf': tags_f, 's_tags': subtags }
+    return render_to_response('archivos/listar.html', params,
+                              context_instance=RequestContext(request))
+
+
+def add_s(request):
+    
+    id   = request.GET['m_id']
+    a_id = request.GET['a_id']
+    s_id = request.GET['s_id']
+    t_id = request.GET['t_id']
+
+    mod = ModeloCorpus.objects(id=id)[0]
+    subtag = Tag.objects(id=t_id)[0]
+    sesion = Sesiones.objects(id=s_id)[0]
+    anidado = Anidados.objects(id=a_id)[0]
+    
+    tags = subtag.tags
+    tags_f = subtag.tags_f
+    
+    if subtag.nombre not in sesion.refa.keys():
+        sesion.refa[subtag.nombre] = []
+    if anidado.id not in sesion.refa[subtag.nombre]:
+        sesion.refa[subtag.nombre].append(anidado.id)
+
+
+    sesion.save()
+    
+    sesiones = Sesiones.objects(corpus=mod)
+    subtags = Tag.objects(corpus=mod)
+    anidados = Anidados.objects(corpus=mod)
+    tags = mod.tags
+    tags_f = mod.tags_f
+    params = {'m_id' : id , 'sesiones': sesiones,'anidados':anidados, 'tags': tags, 'tagsf': tags_f, 's_tags': subtags }
+    return render_to_response('archivos/listar.html', params,
+                              context_instance=RequestContext(request))
+
+
+
 
 def editar(request):
     if request.method == 'GET':
         a_id = eval("request." + request.method + "['a_id']")
-        c_id = eval("request." + request.method + "['c_id']")
+        c_id = eval("request." + request.method + "['m_id']")
         
-        arch = Archivo.objects(id=a_id)[0]
-        corp = ModeloCorpus.objects(id=c_id)[0]
-        tags = Tag.objects(corpus=corp)
+        arch = Sesiones.objects(id=a_id)[0]
+        mod = ModeloCorpus.objects(id=c_id)[0]
+        tags = mod.tags
         
-        params = {'arch': arch, 'tags': tags, 'c_id': c_id}
+        params = {'arch': arch, 'tags': tags, 'm_id': c_id}
         temp = 'archivos/edit.html'
             
     elif request.method == 'POST':
         
         a_id = request.POST['a_id']
-        c_id = request.POST['c_id']
+        c_id = request.POST['m_id']
 
-        corp = ModeloCorpus.objects(id=c_id)[0]
-        arch = Archivo.objects(id=a_id)[0]
-        tags = Tag.objects(corpus=corp)
+        arch = Sesiones.objects(id=a_id)[0]
+        mod = ModeloCorpus.objects(id=c_id)[0]
+        subtags = Tag.objects(corpus=mod)
+        tags = mod.tags
 
         d = {}
         for etiqueta in tags:
-            d[etiqueta.tag] = request.POST.get(etiqueta.tag,False)
+            d[etiqueta] = request.POST.get(etiqueta,False)
         
         arch.tags = d
         arch.save()
         
-        params = {'id' : c_id , 'archivos': Archivo.objects(corpus=corp), 'tags': tags}
+        sesiones = Sesiones.objects(corpus=mod)
+        params = {'m_id' : c_id , 'sesiones': sesiones, 'tags': tags, 'tagsf': mod.tags_f, 's_tags': subtags }
         temp = 'archivos/listar.html'
     
     return render_to_response(temp,params,
@@ -85,92 +197,34 @@ def editar(request):
 def borrar(request):
     if request.method == 'GET':
         a_id = eval("request." + request.method + "['a_id']")
-        c_id = eval("request." + request.method + "['c_id']")
+        m_id = eval("request." + request.method + "['m_id']")
         
-        params = {'a_id': a_id, 'c_id': c_id}
+        params = {'a_id': a_id, 'm_id': m_id}
         temp = 'archivos/delete.html'
     
     elif request.method == 'POST':
         
         a_id = request.POST['a_id']
-        c_id = request.POST['c_id']
+        m_id = request.POST['m_id']
         
-        corp = ModeloCorpus.objects(id=c_id)[0]
-        archivo = Archivo.objects(id=a_id)[0]
+        corp = ModeloCorpus.objects(id=m_id)[0]
+        archivo = Sesiones.objects(id=a_id)[0]
         tags = Tag.objects(corpus=corp)
 
-        delete_file(DIR_FILES+archivo.archivo)
+        #delete_file(DIR_FILES+archivo.archivo)
         archivo.delete()
         
-
         
-        
-        
-        arch = Archivo.objects(corpus=corp)
-        
-        params = {'id' : c_id , 'archivos': arch, 'tags': tags}
-        
+        mod = ModeloCorpus.objects(id=m_id)[0]
+        sesiones = Sesiones.objects(corpus=mod)
+        anidados = Anidados.objects(corpus=mod)
+    
+        subtags = Tag.objects(corpus=mod)
+        params = {'m_id' : m_id , 'sesiones': sesiones, 'anidados' : anidados, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
         temp = 'archivos/listar.html'
 
     return render_to_response(temp, params,
                               context_instance=RequestContext(request))
-
-def guardar(request):
-
-    id = request.POST['id']
-    corp = ModeloCorpus.objects(id=id)[0]
-    tags = corp.tags
-
-    form = UploadFileForm(request.POST, request.FILES)
-
-    nombre = id + '_' + uuid.uuid4().hex + '.mp3'
-    total = DIR_FILES + nombre
-    d = {}
-    if form.is_valid():
-        handle_uploaded_file(request.FILES['file'],total)
-    else:
-        print('Man is the bastard')
-    for etiqueta in tags:
-        d[etiqueta.tag] = request.POST.get(etiqueta.tag,False)
-
-    archivo = Archivo(archivo=nombre,tags=d,corpus=corp)
-    archivo.save()
-
-
-    arch = Archivo.objects(corpus=corp)
-
-    params = {'id' : id , 'archivos': arch, 'tags': tags}
-    return render_to_response('archivos/listar.html', params,
-                              context_instance=RequestContext(request))
-
-def guardar_s(request):
-    
-    id = request.POST['id']
-    corp = ModeloCorpus.objects(id=id)[0]
-    tags = Tag.objects(corpus=corp)
-    
-    form = UploadFileForm(request.POST, request.FILES)
-    
-    nombre = id + '_' + uuid.uuid4().hex + '.mp3'
-    total = DIR_FILES + nombre
-    d = {}
-    if form.is_valid():
-        handle_uploaded_file(request.FILES['file'],total)
-    else:
-        print('Man is the bastard')
-    for etiqueta in tags:
-        d[etiqueta.tag] = request.POST.get(etiqueta.tag,False)
-
-    archivo = Archivo(archivo=nombre,tags=d,corpus=corp)
-    archivo.save()
-
-
-arch = Archivo.objects(corpus=corp)
-    
-    params = {'id' : id , 'archivos': arch, 'tags': tags}
-    return render_to_response('archivos/listar.html', params,
-                              context_instance=RequestContext(request))
-
 
 def delete_file(nombre):
     os.remove(nombre)

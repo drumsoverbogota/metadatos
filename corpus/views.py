@@ -83,7 +83,7 @@ def subtags_add(request):
     
     tag_id = eval("request." + request.method + "['id_tag']")
     tag = Tag.objects(id=tag_id)[0]
-    print(tag.corpus.id)
+
     if request.method == 'GET':
         
         template = 'corpus/subtags.html'
@@ -96,6 +96,12 @@ def subtags_add(request):
             tag.tags_f.append(n_tag)
         else:
             tag.tags.append(n_tag)
+    
+        print(tag.main_tag)
+        if tag.main_tag is None:
+            tag.main_tag = n_tag
+        elif tag.main_tag is '':
+            tag.main_tag = n_tag
         
         tag.save()
         template = 'corpus/subtags.html'
@@ -161,12 +167,14 @@ def subtags_delete(request):
         for tags in p:
             if tags == d_tag:
                 p.remove(tags)
+                if tag.main_tag == d_tag:
+                    tag.main_tag = ''
                 break
     else:
         
         tag = Tag.objects(id=tag_id)
         tag.delete()
-    
+
     #corp.update(pull__tags=tag)
     tag.save()
     

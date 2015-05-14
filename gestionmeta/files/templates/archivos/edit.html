@@ -11,13 +11,13 @@
             <ul>
                 {% for tag in tags %}
                 <li>
-                    <input type="text" name="{{tag.tag}}"
-                    value="{{arch.tags|get_item:tag.tag}}">
+                    <input type="text" name="{{tag}}"
+                    value="{{arch.tags|get_item:tag}}">
                 </li>
                 {% endfor %}
                 <li>
                     <input type="hidden" name="a_id" value="{{arch.id}}">
-                    <input type="hidden" name="c_id" value="{{c_id}}">
+                    <input type="hidden" name="m_id" value="{{m_id}}">
                     <input type="submit" value="Add Post">
                 </li>
             </ul>
@@ -27,7 +27,7 @@
             <ul>
                 <li>
                     <input type="hidden" name="a_id" value="{{arch.id}}">
-                    <input type="hidden" name="c_id" value="{{c_id}}">
+                    <input type="hidden" name="m_id" value="{{m_id}}">
                     <input type="submit" value="Borrar">
                 </li>
             </ul>
