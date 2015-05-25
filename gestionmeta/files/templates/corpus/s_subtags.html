@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
-
     <head>
         {% load staticfiles %}
         <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
             </head>
     <body>
-        <h1>Subtags</h1>
+        <h1>S Subtags</h1>
         
         <ul>
             
@@ -14,13 +13,13 @@
             <li>
                 {{ tags}}
                 
-                <form method="post" action="/corpus/subtags_delete/">
+                <form method="post" action="/corpus/s_subtags_delete/">
                     {% csrf_token %}
                     <input type="hidden" name="id_tag" value="{{id_tag}}">
                     <input type="hidden" name="id_corp" value="{{id_corp}}">
-                    <input type="hidden" name="tag" value="{{tags}}">
-                    <input type="submit" value="Delete">
-                </form>
+                        <input type="hidden" name="tag" value="{{tags}}">
+                            <input type="submit" value="Delete">
+                                </form>
             </li>
             {% endfor %}
         </ul>
@@ -37,11 +36,11 @@
                 <form method="post" action="/corpus/subtags_delete/">
                     {% csrf_token %}
                     <input type="hidden" name="id_tag" value="{{id_tag}}">
-                    <input type="hidden" name="id_corp" value="{{id_corp}}">
-                    <input type="hidden" name="tag" value="{{tags}}">
-                    <input type="hidden" name="isfile" value="True">
-                    <input type="submit" value="Delete">
-                    </form>
+                                            <input type="hidden" name="id_corp" value="{{id_corp}}">
+                        <input type="hidden" name="tag" value="{{tags}}">
+                            <input type="hidden" name="isfile" value="True">
+                                <input type="submit" value="Delete">
+                                    </form>
             </li>
             {% endfor %}
         </ul>
@@ -62,14 +61,15 @@
             {% endfor %}
             
         </ul>
-
-        <form method="post" action="/corpus/subtags_add/">
+        
+        <form method="post" action="/corpus/s_subtags_add/">
             {% csrf_token %}
             
             <input type="hidden" name="id_tag" value="{{id_tag}}">
+            <input type="hidden" name="id_corp" value="{{id_corp}}">
             <input type="text" name="tag" placeholder="tag" required>
             <input type="checkbox" name="archivo" value="True">
-                        Es archivo
+            Es archivo
             <input type="submit" value="Agregar etiqueta">
                             
         </form>
@@ -81,8 +81,8 @@
             <input type="hidden" name="id_tag" value="{{id_tag}}">
             <input type="text" name="tag" placeholder="tag" required>
             <input type="submit" value="Agregar etiqueta compuesta">
-                        
-        </form>
+                            
+                            </form>
         
         
         <a href="/corpus/tags/?id_corp={{id_corp}}">Volver atrás</a>

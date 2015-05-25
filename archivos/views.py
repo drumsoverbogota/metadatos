@@ -74,7 +74,6 @@ def guardar(request):
     sesion = Sesiones(tags=d,corpus=mod)
     sesion.save()
     
-    
     sesiones = Sesiones.objects(corpus=mod)
     anidados = Anidados.objects(corpus=mod)
     

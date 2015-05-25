@@ -5,13 +5,15 @@ class ModeloCorpus(Document):
     tags = ListField(StringField())
     tags_f = ListField(StringField())
 
-class Tag(Document):
+class BaseTag(Document):
     nombre = StringField()
     main_tag = StringField()
     tags = ListField(StringField())
     tags_f = ListField(StringField())
-    corpus = ReferenceField(ModeloCorpus)
     meta = {'allow_inheritance': True}
 
-class Subtag(Tag):
-    ptag = ReferenceField(Tag)
+class Tag(BaseTag):
+    corpus = ReferenceField(ModeloCorpus)
+
+class Subtag(BaseTag):
+    ptag = ReferenceField(BaseTag)

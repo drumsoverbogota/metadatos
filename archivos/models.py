@@ -9,5 +9,6 @@ class Sesiones(Document):
 
 class Anidados(Document):
     tags = DictField()
+    refa = DictField()
     corpus = ReferenceField(ModeloCorpus)
-    ref = ReferenceField(Tag)
+    ref = ReferenceField(BaseTag)

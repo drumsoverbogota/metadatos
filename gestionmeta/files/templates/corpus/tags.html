@@ -15,7 +15,7 @@
     
     <form method="post" action="/corpus/tags_delete/">
         {% csrf_token %}
-        <input type="hidden" name="id" value="{{id}}">
+        <input type="hidden" name="id_corp" value="{{id_corp}}">
         <input type="hidden" name="tag_id" value="{{tags}}">
         <input type="submit" value="Delete">
     </form>
@@ -34,7 +34,7 @@
             
         <form method="post" action="/corpus/tags_delete/">
                 {% csrf_token %}
-            <input type="hidden" name="id" value="{{id}}">
+            <input type="hidden" name="id_corp" value="{{id_corp}}">
             <input type="hidden" name="tag_id" value="{{tags}}">
             <input type="hidden" name="isfile" value="True">
             <input type="submit" value="Delete">
@@ -51,7 +51,7 @@
         
         <form method="post" action="/corpus/tags_delete/">
             {% csrf_token %}
-            <input type="hidden" name="id" value="{{id}}">
+            <input type="hidden" name="id_corp" value="{{id_corp}}">
             <input type="hidden" name="subtag" value="True">
             <input type="hidden" name="tag_id" value="{{tags.id}}">
             <input type="submit" value="Delete">
@@ -63,7 +63,7 @@
     <form method="post" action="/corpus/tags_add/">
         {% csrf_token %}
 
-        <input type="hidden" name="id" value="{{id}}">
+        <input type="hidden" name="id_corp" value="{{id_corp}}">
 
         <input type="text" name="tag" placeholder="tag" required>
         <input type="checkbox" name="archivo" value="True">
@@ -75,7 +75,7 @@
 <form method="post" action="/corpus/subtags/">
     {% csrf_token %}
     
-    <input type="hidden" name="id" value="{{id}}">
+    <input type="hidden" name="id_corp" value="{{id_corp}}">
     <input type="text" name="tag" placeholder="tag" required>            
     <input type="submit" value="Agregar etiqueta compuesta">
                 
