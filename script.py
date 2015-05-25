@@ -49,10 +49,8 @@ def createSubtags(tags,tag):
                                     if nombre not in anidados.refa.keys():
                                         anidados.refa[nombre] = []
                                     anidados.refa[nombre].append(a.id)
-                            anidados.tags = d
-                            anidados.save()
-            #print(s_tags)
-
+                    anidados.tags = d
+                    anidados.save()
 
 
 with open('../Fragmentos.csv', encoding='utf16') as csvfile:
