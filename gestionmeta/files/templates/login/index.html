@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load staticfiles %}
+        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+            </head>
+    <body>
+        <h1>Inicie sesión</h1>
+        <form method="post" action="/login/login/">
+            {% csrf_token %}
+            
+            Username: <input type="text" name="user"><br>
+            Password: <input type="password" name="password">
+            <input type="submit" value="Iniciar sesión">
+        </form>
+    </body>
+</html>

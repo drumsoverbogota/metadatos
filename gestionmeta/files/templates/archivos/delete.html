@@ -5,6 +5,7 @@
         <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
             </head>
     <body>
+    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>    
         <h1>Borrar</h1>
         <form method="post" action="/archivos/borrar/">
             {% csrf_token %}

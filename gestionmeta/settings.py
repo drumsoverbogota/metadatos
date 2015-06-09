@@ -14,6 +14,7 @@ import os
 
 from mongoengine import connect
 connect('gestion')
+connect('employeedb', username='my_username', password='secret_password')
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -40,7 +41,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
+                  #'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -50,6 +51,7 @@ INSTALLED_APPS = (
     'subida',
     'corpus',
     'archivos',
+    'login',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -65,6 +67,7 @@ AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
 SESSION_ENGINE = 'mongoengine.django.sessions'
+SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
 
 ROOT_URLCONF = 'gestionmeta.urls'
 
@@ -106,3 +109,6 @@ STATICFILES_DIRS = (
                     "gestionmeta/files/static",
                     "../static",
                     )
+
+#AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+#MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'

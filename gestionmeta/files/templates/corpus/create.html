@@ -6,6 +6,7 @@
       <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
   </head> 
   <body>
+    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>
     <h1>Blongo</h1>
     <form method="post" action="/corpus/create/">
       {% csrf_token %}

@@ -3,8 +3,9 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from mongoengine import *
 from corpus.models import *
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+@login_required(login_url='/login')
 def index(request):
     # Get all posts from DB
     corp = ModeloCorpus.objects
@@ -12,6 +13,7 @@ def index(request):
     return render_to_response('corpus/index.html', {'Corpus': corp},
                               context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def create(request):
     # Get all posts from DB
     if request.method == 'POST':
@@ -24,7 +26,7 @@ def create(request):
     corp = ModeloCorpus.objects
     return render_to_response(template, {'Corpus': corp},context_instance=RequestContext(request))
 
-
+@login_required(login_url='/login')
 def tags(request):
     id_corp = eval("request." + request.method + "['id']")
     corp = ModeloCorpus.objects(id=id_corp)[0]
@@ -34,7 +36,7 @@ def tags(request):
     params = {'Tags': tags_c,'Tagsf':corp.tags_f,'Subtags':subtags_c ,'id_corp': id_corp}
     return render_to_response(template, params, context_instance=RequestContext(request))
 
-
+@login_required(login_url='/login')
 def subtags(request):
     id_corp = eval("request." + request.method + "['id_corp']")
 
@@ -61,7 +63,7 @@ def subtags(request):
 
     return render_to_response(template, params, context_instance=RequestContext(request))
 
-
+@login_required(login_url='/login')
 def s_subtags(request):
 
     if request.method == 'POST':
@@ -79,11 +81,12 @@ def s_subtags(request):
         tags_c = tag.tags
         subtags_c = Subtag.objects(ptag=tag)
         
-        params = {'Tags': tags_c,'Tagsf':tag.tags_f,'Subtags':subtags_c ,'id_corp': id_corp,'id_tag': id_tag  }
+        params = {'Tags': tags_c,'Tagsf':tag.tags_f,'Subtags':subtags_c ,'id_corp': id_corp,'id_tag': id_tag ,'id_back':tag.id }
         template = 'corpus/s_subtags.html'
     
     return render_to_response(template, params, context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def tags_add(request):
     
     id_corp = request.POST['id_corp']
@@ -102,6 +105,7 @@ def tags_add(request):
             #url = reverse('corpus:tags', args = {'Tags': Corpus.objects(id=id)[0].tags,'id': id})
     return render_to_response(template, {'Tags': corp.tags, 'Tagsf':corp.tags_f, 'id_corp': id_corp}, context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def subtags_add(request):
     
     tag_id = eval("request." + request.method + "['id_tag']")
@@ -133,6 +137,7 @@ def subtags_add(request):
     params = {'Tags': tag.tags , 'Tagsf': tag.tags_f, 'Subtags': subtag, 'id_tag': tag_id, 'id_corp' :tag.corpus.id}
     return render_to_response(template, params, context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def s_subtags_add(request):
     
     tag_id = eval("request." + request.method + "['id_tag']")
@@ -162,11 +167,11 @@ def s_subtags_add(request):
         tag.save()
         template = 'corpus/s_subtags.html'
 
-    params = {'Tags': tag.tags , 'Tagsf': tag.tags_f, 'Subtags': subtag, 'id_tag': tag_id, 'id_corp' :id_corp}
+    params = {'Tags': tag.tags , 'Tagsf': tag.tags_f, 'Subtags': subtag, 'id_tag': tag_id, 'id_corp' :id_corp, 'id_back': tag.ptag.id}
     return render_to_response(template, params, context_instance=RequestContext(request))
 
 
-
+@login_required(login_url='/login')
 def delete(request):
     id = eval("request." + request.method + "['id']")
     if request.method == 'POST':
@@ -182,7 +187,7 @@ def delete(request):
     
     return render_to_response(template, params, context_instance=RequestContext(request))
 
-
+@login_required(login_url='/login')
 def tags_delete(request):
     id_corp = request.POST['id_corp']
     tag_id = request.POST['tag_id']
@@ -217,6 +222,7 @@ def tags_delete(request):
 
     return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id_corp': id_corp}, context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def subtags_delete(request):
     id_corp = request.POST['id_corp']
     id_tag = request.POST['id_tag']
@@ -261,6 +267,7 @@ def subtags_delete(request):
     return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id_corp': id_corp}, context_instance=RequestContext(request))
 
 
+@login_required(login_url='/login')
 def s_subtags_delete(request):
     id_corp = eval("request." + request.method + "['id_corp']")
     id_tag = request.POST['id_tag']

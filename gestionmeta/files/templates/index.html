@@ -7,11 +7,20 @@
   </head> 
   <body>
 
+    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>
   
-  
+    {% if 'admin'  in user.perm %}
+        <p>Funciones de administrador</p>
+        <a href="/corpus">Administrar modelos</a>
+        <br>
+        <a href="/login/create">Administrar usuarios</a>
+        <br>
+        <a href="/importar">Importar archivos desde csv</a>
+        <br>
+    {% endif%}
 
-    <a href="/corpus">Administrar corpus</a>
-    <br>
+
+        <p>Funciones de usuario</p>
     <a href="/archivos">Administrar archivos</a>
   
   

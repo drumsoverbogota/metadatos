@@ -1,0 +1,20 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+      {% load staticfiles %}
+      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+  </head> 
+  <body>
+
+    <form enctype="multipart/form-data" method="post" action="/importar/">
+        {% csrf_token %}
+        Suba un archivo:
+        {{form}}
+        <input type="text" name="nombre">
+        <input type="submit" value="Importar"><br>
+    </form>
+  <br>
+  Recuerde que el archivo tiene que estar en formato "ZIP"
+  </body>
+</html>

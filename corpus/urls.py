@@ -3,7 +3,7 @@ from corpus import views
 
 
 urlpatterns = patterns('',
-    url(r'^$', 'corpus.views.index' , name='index'),
+    url(r'^$', 'corpus.views.index' , name='index_m'),
     url(r'^create/', 'corpus.views.create', name='create'),
     url(r'^delete/', 'corpus.views.delete', name='delete'),
     url(r'^tags/', 'corpus.views.tags', name='tags'),

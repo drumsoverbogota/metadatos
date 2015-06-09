@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.template.defaulttags import register
-
+from django.contrib.auth.decorators import login_required
 
 
 from corpus.models import *
@@ -17,13 +17,14 @@ DIR_FILES = '/Users/sergiomancera/Archivos/'
 def get_item(dictionary, key):
     return dictionary.get(key)
 
-
+@login_required(login_url='/login')
 def index(request):
 
     corp = ModeloCorpus.objects
     return render_to_response('archivos/index.html', {'Corpus': corp},
                               context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
 def listar(request):
 
     id = eval("request." + request.method + "['m_id']")
@@ -36,6 +37,7 @@ def listar(request):
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def crear(request):
 
     id = request.POST['m_id']
@@ -59,6 +61,7 @@ def crear(request):
     return render_to_response(template,params,
                               context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def guardar(request):
 
     id = request.POST['m_id']
@@ -81,6 +84,7 @@ def guardar(request):
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
 def guardar_s(request):
     
     id = request.POST['m_id']
@@ -120,7 +124,7 @@ def guardar_s(request):
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
-
+@login_required(login_url='/login')
 def add_s(request):
     
     id   = request.GET['m_id']
@@ -155,7 +159,7 @@ def add_s(request):
 
 
 
-
+@login_required(login_url='/login')
 def editar(request):
     if request.method == 'GET':
         a_id = eval("request." + request.method + "['a_id']")
@@ -193,13 +197,14 @@ def editar(request):
                               context_instance=RequestContext(request))
 
 
+@login_required(login_url='/login')
 def borrar(request):
     if request.method == 'GET':
         a_id = eval("request." + request.method + "['a_id']")
         m_id = eval("request." + request.method + "['m_id']")
         
         params = {'a_id': a_id, 'm_id': m_id}
-        temp = 'archivos/delete.html'
+        temp = 'archivos/delete.html'/Users/sergiomancera/Proyectos/gestionmeta/corpus/views.py
     
     elif request.method == 'POST':
         
