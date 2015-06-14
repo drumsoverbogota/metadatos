@@ -23,6 +23,10 @@
         <input type="hidden" name="id" value="{{ corp.id }}">
         <input type="submit" name="" value="Editar etiquetas">
       </form>
+      <form method="get" action="/corpus/choose">
+        <input type="hidden" name="id" value="{{ corp.id }}">
+        <input type="submit" name="" value="Escoger etiqueta a mostrar">
+      </form>
       <form method="get" action="/corpus/delete">
         <input type="hidden" name="id" value="{{corp.id}}">
         <input type="submit" value="Borrar">

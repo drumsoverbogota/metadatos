@@ -5,6 +5,8 @@ from corpus import views
 urlpatterns = patterns('',
     url(r'^$', 'corpus.views.index' , name='index_m'),
     url(r'^create/', 'corpus.views.create', name='create'),
+    url(r'^choose/', 'corpus.views.choose'),
+    url(r'^choose_s/', 'corpus.views.choose_s'),                       
     url(r'^delete/', 'corpus.views.delete', name='delete'),
     url(r'^tags/', 'corpus.views.tags', name='tags'),
     url(r'^subtags/', 'corpus.views.subtags', name='subtags'),

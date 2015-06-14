@@ -5,6 +5,9 @@ class ModeloCorpus(Document):
     tags = ListField(StringField())
     tags_f = ListField(StringField())
 
+    n_tag = StringField()
+    main = StringField()
+
 class BaseTag(Document):
     nombre = StringField()
     main_tag = StringField()
@@ -17,3 +20,4 @@ class Tag(BaseTag):
 
 class Subtag(BaseTag):
     ptag = ReferenceField(BaseTag)
+    corpus = ReferenceField(ModeloCorpus)

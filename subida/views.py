@@ -37,7 +37,7 @@ def createSubtags(tags,tag,folder,mod):
                             pass
                         else:
                             s_tags.append(col)
-                    n_tag = Subtag(nombre=b[2:],main_tag=s_headers[0],tags=s_tags,ptag=tag)
+                    n_tag = Subtag(nombre=b[2:],main_tag=s_headers[0],tags=s_tags,ptag=tag,corpus=mod)
                     n_tag.save()
                     if len(s_a_tags) > 0:
                         createSubtags(s_a_tags,n_tag)
@@ -115,7 +115,7 @@ def importar_b(request):
                         tags.append(col)
         
                 print('Documentos')
-                mod = ModeloCorpus(nombre=nombre,tags=tags)
+                mod = ModeloCorpus(nombre=nombre,n_tag=archivo.replace(' ', '')[:-4],tags=tags,main='0')
                 mod.save()
                 for a in a_tags:
                     #print(a)

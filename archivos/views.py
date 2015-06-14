@@ -29,11 +29,19 @@ def listar(request):
 
     id = eval("request." + request.method + "['m_id']")
     mod = ModeloCorpus.objects(id=id)[0]
-    sesiones = Sesiones.objects(corpus=mod)
-    anidados = Anidados.objects(corpus=mod)
     
-    subtags = Tag.objects(corpus=mod)
-    params = {'m_id' : id , 'sesiones': sesiones, 'anidados' : anidados, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+    if mod.main == '0':
+        sesiones = Sesiones.objects(corpus=mod)
+        subtags = Tag.objects(corpus=mod)
+        params = {'m_id' : id , 'sesiones': sesiones, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+    else:
+        if len(Tag.objects(id=mod.main)) > 0:
+            tag = Tag.objects(id=mod.main)[0]
+        else:
+            tag = Subtag.objects(id=mod.main)[0]
+        sesiones = Anidados.objects(ref=tag)
+        subtags = Subtag.objects(corpus=mod,ptag=tag)
+        params = {'m_id' : id , 'sesiones': sesiones, 'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 

@@ -311,3 +311,36 @@ def s_subtags_delete(request):
     
     return render_to_response(template, {'Tags': corp.tags , 'Tagsf':corp.tags_f,'Subtags':subtags_c,'id_corp': id_corp}, context_instance=RequestContext(request))
 
+
+@login_required(login_url='/login')
+
+def choose(request):
+    id_corp = eval("request." + request.method + "['id']")
+    corp = ModeloCorpus.objects(id=id_corp)[0]
+    template = 'corpus/choose.html'
+    
+    tags = Tag.objects(corpus=corp)
+    stags = Subtag.objects(corpus=corp)
+
+    params = {'tags': tags, 'stags':stags ,'corp':corp,'id_corp': id_corp}
+    return render_to_response(template, params, context_instance=RequestContext(request))
+
+
+
+def choose_s(request):
+    id_corp = eval("request." + request.method + "['id_corp']")
+    main = request.GET['main']
+    
+    corp = ModeloCorpus.objects(id=id_corp)[0]
+    
+    corp.main = main
+    corp.save()
+    
+    
+    template = 'corpus/index.html'
+    corp = ModeloCorpus.objects
+    
+    return render_to_response('corpus/index.html', {'Corpus': corp},
+                              context_instance=RequestContext(request))
+
+
