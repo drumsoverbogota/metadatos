@@ -1,16 +1,11 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html>
-  <head>
-      {% load staticfiles %}
-      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-  </head> 
-  <body>
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
       Seleccione el archivo principal: <br>
     {% for i in lista %}
         <a href="/importar_b?archivo={{i}}&folder={{folder}}&nombre={{nombre}}">{{i}}</a><br>
     {% endfor %}
 
     
-  </body>
-</html>
+{% endblock %}

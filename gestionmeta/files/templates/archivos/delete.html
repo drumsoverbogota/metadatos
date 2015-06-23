@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        {% load staticfiles %}
-        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-            </head>
-    <body>
-    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>    
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
         <h1>Borrar</h1>
         <form method="post" action="/archivos/borrar/">
             {% csrf_token %}
@@ -19,5 +15,4 @@
             <input type="hidden" name="m_id" value="{{m_id}}">
             <input type="submit" value="Cancelar">
         </form>
-    </body>
-</html>
+{% endblock %}

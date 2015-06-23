@@ -1,14 +1,9 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html>
-  <head>
-      {% load staticfiles %}
-      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-  </head> 
-  <body>
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>
-  
+{% block body_block %}
+
+
     {% if 'admin'  in user.perm %}
         <p>Funciones de administrador</p>
         <a href="/corpus">Administrar modelos</a>
@@ -23,6 +18,4 @@
         <p>Funciones de usuario</p>
     <a href="/archivos">Administrar archivos</a>
   
-  
-  </body>
-</html>
+{% endblock %}

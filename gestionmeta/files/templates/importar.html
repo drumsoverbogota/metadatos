@@ -1,11 +1,7 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html>
-  <head>
-      {% load staticfiles %}
-      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-  </head> 
-  <body>
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
 
     <form enctype="multipart/form-data" method="post" action="/importar/">
         {% csrf_token %}
@@ -16,5 +12,4 @@
     </form>
   <br>
   Recuerde que el archivo tiene que estar en formato "ZIP"
-  </body>
-</html>
+{% endblock %}

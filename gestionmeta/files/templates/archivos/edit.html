@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        {% load staticfiles %}
-        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-            </head>
-    <body>
-    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>    
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
         <h1>Editar</h1>
         <form method="post" action="/archivos/editar/">
             {% csrf_token %}
@@ -33,5 +29,4 @@
                 </li>
             </ul>
         </form>
-    </body>
-</html>
+{% endblock %}

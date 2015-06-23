@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-    <head>
-        {% load staticfiles %}
-        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-            </head>
-    <body>
-    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>     
+{% block body_block %}
         <h1>Subtags</h1>
         
         <ul>
@@ -87,5 +82,4 @@
         
         
         <a href="/corpus/tags/?id={{id_corp}}">Volver atrás</a>
-    </body>
-</html>
+{% endblock %}

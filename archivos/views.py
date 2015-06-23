@@ -172,12 +172,23 @@ def editar(request):
     if request.method == 'GET':
         a_id = eval("request." + request.method + "['a_id']")
         c_id = eval("request." + request.method + "['m_id']")
-        
-        arch = Sesiones.objects(id=a_id)[0]
+
         mod = ModeloCorpus.objects(id=c_id)[0]
-        tags = mod.tags
         
-        params = {'arch': arch, 'tags': tags, 'm_id': c_id}
+        if mod.main == '0':
+            arch = Sesiones.objects(id=a_id)[0]
+            tags = mod
+        else:
+            arch = Anidados.objects(id=a_id)[0]
+            if len(Tag.objects(id=mod.main)) > 0:
+                tags = Tag.objects(id=mod.main)[0]
+                print(tags)
+            else:
+                tags = Subtag.objects(id=mod.main)[0]
+                print(tags)
+
+        
+        params = {'arch': arch, 'tags': tags.tags, 'm_id': c_id}
         temp = 'archivos/edit.html'
             
     elif request.method == 'POST':
@@ -185,20 +196,40 @@ def editar(request):
         a_id = request.POST['a_id']
         c_id = request.POST['m_id']
 
-        arch = Sesiones.objects(id=a_id)[0]
         mod = ModeloCorpus.objects(id=c_id)[0]
-        subtags = Tag.objects(corpus=mod)
-        tags = mod.tags
 
+        if mod.main == '0':
+            arch = Sesiones.objects(id=a_id)[0]
+            tags = mod.tags
+            subtags = Tag.objects(corpus=mod)
+        else:
+            arch = Anidados.objects(id=a_id)[0]
+            if len(Tag.objects(id=mod.main)) > 0:
+                tag = Tag.objects(id=mod.main)[0]
+
+            else:
+                tag = Subtag.objects(id=mod.main)[0]
+
+            tags = tag.tags
+            subtags = Subtag.objects(corpus=mod,ptag=tag)
         d = {}
         for etiqueta in tags:
             d[etiqueta] = request.POST.get(etiqueta,False)
-        
+
+        if mod.main == '0':
+            sesiones = Sesiones.objects(corpus=mod)
+        else:
+            sesiones = Anidados.objects(ref=tag)
+
+
+        #subtags = Tag.objects(corpus=mod)
         arch.tags = d
         arch.save()
         
-        sesiones = Sesiones.objects(corpus=mod)
+
         params = {'m_id' : c_id , 'sesiones': sesiones, 'tags': tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+
+        #params = {'m_id' : c_id , 'sesiones': sesiones, 'tags': tags, 'tagsf': mod.tags_f}
         temp = 'archivos/listar.html'
     
     return render_to_response(temp,params,

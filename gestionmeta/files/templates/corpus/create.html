@@ -1,12 +1,7 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-<!DOCTYPE html>
-<html>
-  <head>
-      {% load staticfiles %}
-      <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
-  </head> 
-  <body>
-    <p align="right"><a href="/login/logout">Cerrar sesión<a/></p>
+{% block body_block %}
     <h1>Blongo</h1>
     <form method="post" action="/corpus/create/">
       {% csrf_token %}
@@ -19,5 +14,4 @@
         </li>
       </ul>
     </form>
-  </body>
-</html>
+{% endblock %}
