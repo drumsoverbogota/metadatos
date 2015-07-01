@@ -33,7 +33,8 @@ def listar(request):
     if mod.main == '0':
         sesiones = Sesiones.objects(corpus=mod)
         subtags = Tag.objects(corpus=mod)
-        params = {'m_id' : id , 'sesiones': sesiones, 'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+        anidados = Anidados.objects(corpus=mod)
+        params = {'m_id' : id , 'sesiones': sesiones, 'anidados':anidados ,'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
     else:
         if len(Tag.objects(id=mod.main)) > 0:
             tag = Tag.objects(id=mod.main)[0]
@@ -41,7 +42,16 @@ def listar(request):
             tag = Subtag.objects(id=mod.main)[0]
         sesiones = Anidados.objects(ref=tag)
         subtags = Subtag.objects(corpus=mod,ptag=tag)
-        params = {'m_id' : id , 'sesiones': sesiones, 'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
+        anidados = []
+        for s in subtags:
+
+            anidados.append(Anidados.objects(ref=s))
+            
+            for a in anidados:
+            
+                print(get_item(a.tags,s.main_tag))
+
+        params = {'m_id' : id , 'sesiones': sesiones, 'anidados':anidados ,'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
