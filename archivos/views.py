@@ -17,7 +17,7 @@ DIR_FILES = '/Users/sergiomancera/Archivos/'
 def get_item(dictionary, key):
     return dictionary.get(key)
 
-@login_required(login_url='/login')
+@login_required(login_url='/login☃')
 def index(request):
 
     corp = ModeloCorpus.objects
@@ -34,6 +34,9 @@ def listar(request):
         sesiones = Sesiones.objects(corpus=mod)
         subtags = Tag.objects(corpus=mod)
         anidados = Anidados.objects(corpus=mod)
+
+        for a in anidados:
+            print(get_item(a.tags,'Id'))
         params = {'m_id' : id , 'sesiones': sesiones, 'anidados':anidados ,'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
     else:
         if len(Tag.objects(id=mod.main)) > 0:
@@ -42,15 +45,13 @@ def listar(request):
             tag = Subtag.objects(id=mod.main)[0]
         sesiones = Anidados.objects(ref=tag)
         subtags = Subtag.objects(corpus=mod,ptag=tag)
-        anidados = []
-        for s in subtags:
+        anidados = None
+        
 
-            anidados.append(Anidados.objects(ref=s))
-            
-            for a in anidados:
-            
-                print(get_item(a.tags,s.main_tag))
+        anidados = Anidados.objects.filter(ref__in=Subtag.objects(ptag=tag))
 
+        for a in anidados:
+            print(get_item(a.tags,'Id'))
         params = {'m_id' : id , 'sesiones': sesiones, 'anidados':anidados ,'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
@@ -281,6 +282,7 @@ def borrar(request):
 
 def delete_file(nombre):
     os.remove(nombre)
+
 
 def handle_uploaded_file(f,nombre):
     with open(nombre, 'wb+') as destination:
