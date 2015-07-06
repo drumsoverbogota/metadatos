@@ -1,9 +1,16 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
-
-{% block body_block %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load staticfiles %}
+        <link href="{% static "main.css" %}" rel="stylesheet" type="text/css">
+            </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                    </div>
+            <div id="content">
         <h1>Editar</h1>
-        <form method="post" action="/archivos/editar/">
+        <form method="post" action="/archivos/editar_p/">
             {% csrf_token %}
             <ul>
                 {% for tag in tags %}
@@ -15,7 +22,8 @@
                 <li>
                     <input type="hidden" name="a_id" value="{{arch.id}}">
                     <input type="hidden" name="m_id" value="{{m_id}}">
-                    <input type="submit" value="Add Post">
+                    <input type="hidden" name="t_id" value="{{t_id}}">
+                    <input type="submit" value="Guardar Cambios">
                 </li>
             </ul>
         </form>
@@ -29,4 +37,9 @@
                 </li>
             </ul>
         </form>
-{% endblock %}
+            </div>
+            <div id="footer">
+            </div>
+        </div>
+    </body>
+</html>

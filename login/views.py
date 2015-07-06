@@ -10,6 +10,29 @@ from django.contrib import messages
 
 
 from .models import Usuario
+from corpus.models import *
+from archivos.models import *
+
+def test(request):
+    
+    tag = '5591ead23d878a0556ce9d02'
+    a = Anidados.objects(corpus='5591eb2a3d878a0556ce9e02')
+    b = Anidados.objects(tags__Estrato='N')
+    c = Anidados.objects(tags__Descripción__contains='de')
+    d = Anidados.objects(ref=tag,tags__Descripción__contains='Bogotá')
+    e = Anidados.objects(ref=tag)
+    print(len(e))
+    print(len(d))
+    #for an in c:
+        #print(an.tags['Descripción'])
+        #print('--------------------------')
+    print('**************************************************************')
+    for an in d:
+        print(an.tags['Descripción'])
+        print('--------------------------')
+    print('sirve')
+
+    return redirect('index')
 
 
 def login(request):

@@ -40,7 +40,13 @@
             {% for refa in arch.refa|get_item:t.nombre%}
                 {% for an in anidados%}
                     {% if refa == an.id%}
-                        {{an.tags|get_item:t.main_tag}}
+                        <a href="about:blank"
+                        onclick="window.open('/archivos/editar_p?m_id={{m_id}}&a_id={{an.id}}&t_id={{t.id}}',
+                                            'newwindow', 
+                                            'width=600, height=800');
+                                return false;">
+                            {{an.tags|get_item:t.main_tag}}
+                        </a>
                         <br>
                     {% endif %}
                 {% endfor %}
@@ -62,6 +68,7 @@
 
                 <input type="hidden" name="a_id" value="{{arch.id}}">
                 <input type="hidden" name="m_id" value="{{m_id}}">
+                <input type="hidden" name="main" value="{{main}}">
                 <input type="submit" value="Editar">
             </form>
         </td>

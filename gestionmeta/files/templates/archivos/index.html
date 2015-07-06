@@ -12,7 +12,11 @@
 
     <form method="get" action="/archivos/listar">
         <input type="hidden" name="m_id" value="{{ corpus.id }}">
-        <input type="submit" name="" value="Editar etiquetas">
+        <input type="submit" name="" value="Ver archivos completos">
+    </form>
+    <form method="get" action="/archivos/buscar">
+        <input type="hidden" name="m_id" value="{{ corpus.id }}">
+        <input type="submit" name="" value="Realizar busquedas">
     </form>
 
     

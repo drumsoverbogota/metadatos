@@ -1,4 +1,5 @@
 from django.shortcuts import render, render_to_response
+from django.http import HttpResponse
 from django.template import RequestContext
 from django.template.defaulttags import register
 from django.contrib.auth.decorators import login_required
@@ -13,16 +14,60 @@ import os
 
 DIR_FILES = '/Users/sergiomancera/Archivos/'
 
+
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
-@login_required(login_url='/login☃')
+@login_required(login_url='/login')
 def index(request):
 
     corp = ModeloCorpus.objects
     return render_to_response('archivos/index.html', {'Corpus': corp},
                               context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def buscar(request):
+    
+    id = eval("request." + request.method + "['m_id']")
+    mod = ModeloCorpus.objects(id=id)[0]
+    
+    template = 'archivos/buscar.html'
+    
+    tags = Tag.objects(corpus=mod)
+    stags = Subtag.objects(corpus=mod)
+    
+    params = {'tags': tags, 'stags':stags ,'mod':mod}
+    return render_to_response(template, params, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def resultados(request):
+    
+    id = eval("request." + request.method + "['m_id']")
+    main = eval("request." + request.method + "['main']")
+    tags = eval("request." + request.method + "['tags']")
+    busq = eval("request." + request.method + "['busq']")
+    mod = ModeloCorpus.objects(id=id)[0]
+    
+    if main == id:
+        sesiones = eval("Sesiones.objects(corpus= mod ,tags__" + tags + "__icontains='" + busq+ "')")
+        print(sesiones)
+        subtags = Tag.objects(corpus=mod)
+        anidados = Anidados.objects(corpus=mod)
+        params = {'m_id' : id ,'main': id ,'sesiones': sesiones, 'anidados':anidados ,'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+    else:
+        if len(Tag.objects(id=main)) > 0:
+            tag = Tag.objects(id=main)[0]
+        else:
+            tag = Subtag.objects(id=main)[0]
+        sesiones = eval("Anidados.objects(ref=tag ,tags__" + tags + "__icontains='" + busq+ "')")
+        subtags = Subtag.objects(corpus=mod,ptag=tag)
+        anidados = Anidados.objects.filter(ref__in=Subtag.objects(ptag=tag))
+
+        params = {'m_id' : id , 'main': main,'sesiones': sesiones, 'anidados':anidados ,'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
+    return render_to_response('archivos/listar.html', params,
+                          context_instance=RequestContext(request))
+
 
 @login_required(login_url='/login/')
 def listar(request):
@@ -35,9 +80,7 @@ def listar(request):
         subtags = Tag.objects(corpus=mod)
         anidados = Anidados.objects(corpus=mod)
 
-        for a in anidados:
-            print(get_item(a.tags,'Id'))
-        params = {'m_id' : id , 'sesiones': sesiones, 'anidados':anidados ,'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
+        params = {'m_id' : id ,'main': id,'sesiones': sesiones, 'anidados':anidados ,'tags': mod.tags, 'tagsf': mod.tags_f, 's_tags': subtags }
     else:
         if len(Tag.objects(id=mod.main)) > 0:
             tag = Tag.objects(id=mod.main)[0]
@@ -52,7 +95,7 @@ def listar(request):
 
         for a in anidados:
             print(get_item(a.tags,'Id'))
-        params = {'m_id' : id , 'sesiones': sesiones, 'anidados':anidados ,'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
+        params = {'m_id' : id , 'main': mod.main,'sesiones': sesiones, 'anidados':anidados ,'tags': tag.tags, 'tagsf': tag.tags_f, 's_tags': subtags }
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
@@ -183,19 +226,20 @@ def editar(request):
     if request.method == 'GET':
         a_id = eval("request." + request.method + "['a_id']")
         c_id = eval("request." + request.method + "['m_id']")
+        main = eval("request." + request.method + "['main']")
 
         mod = ModeloCorpus.objects(id=c_id)[0]
         
-        if mod.main == '0':
+        if c_id == main:
             arch = Sesiones.objects(id=a_id)[0]
             tags = mod
         else:
             arch = Anidados.objects(id=a_id)[0]
-            if len(Tag.objects(id=mod.main)) > 0:
-                tags = Tag.objects(id=mod.main)[0]
+            if len(Tag.objects(id=main)) > 0:
+                tags = Tag.objects(id=main)[0]
                 print(tags)
             else:
-                tags = Subtag.objects(id=mod.main)[0]
+                tags = Subtag.objects(id=main)[0]
                 print(tags)
 
         
@@ -206,20 +250,21 @@ def editar(request):
         
         a_id = request.POST['a_id']
         c_id = request.POST['m_id']
-
+        main = request.POST['main']
         mod = ModeloCorpus.objects(id=c_id)[0]
 
-        if mod.main == '0':
+        if c_id == main:
             arch = Sesiones.objects(id=a_id)[0]
             tags = mod.tags
             subtags = Tag.objects(corpus=mod)
         else:
             arch = Anidados.objects(id=a_id)[0]
-            if len(Tag.objects(id=mod.main)) > 0:
-                tag = Tag.objects(id=mod.main)[0]
+
+            if len(Tag.objects(id=main)) > 0:
+                tag = Tag.objects(id=main)[0]
 
             else:
-                tag = Subtag.objects(id=mod.main)[0]
+                tag = Subtag.objects(id=main)[0]
 
             tags = tag.tags
             subtags = Subtag.objects(corpus=mod,ptag=tag)
@@ -227,24 +272,71 @@ def editar(request):
         for etiqueta in tags:
             d[etiqueta] = request.POST.get(etiqueta,False)
 
-        if mod.main == '0':
+        if c_id == main:
             sesiones = Sesiones.objects(corpus=mod)
         else:
             sesiones = Anidados.objects(ref=tag)
 
-
-        #subtags = Tag.objects(corpus=mod)
         arch.tags = d
         arch.save()
         
 
         params = {'m_id' : c_id , 'sesiones': sesiones, 'tags': tags, 'tagsf': mod.tags_f, 's_tags': subtags }
 
-        #params = {'m_id' : c_id , 'sesiones': sesiones, 'tags': tags, 'tagsf': mod.tags_f}
         temp = 'archivos/listar.html'
     
     return render_to_response(temp,params,
                               context_instance=RequestContext(request))
+
+
+@login_required(login_url='/login')
+def editar_popup(request):
+    if request.method == 'GET':
+        a_id = eval("request." + request.method + "['a_id']")
+        c_id = eval("request." + request.method + "['m_id']")
+        t_id = eval("request." + request.method + "['t_id']")
+        
+        mod = ModeloCorpus.objects(id=c_id)[0]
+        arch = Anidados.objects(id=a_id)[0]
+
+        if len(Tag.objects(id=t_id)) > 0:
+            tags = Tag.objects(id=t_id)[0]
+        else:
+            tags = Subtag.objects(id=t_id)[0]
+
+        params = {'arch': arch, 'tags': tags.tags, 'm_id': c_id, 't_id': t_id}
+        temp = 'archivos/edit_p.html'
+        return render_to_response(temp,params,
+                                  context_instance=RequestContext(request))
+
+    elif request.method == 'POST':
+    
+        a_id = request.POST['a_id']
+        c_id = request.POST['m_id']
+        t_id = request.POST['t_id']
+        mod = ModeloCorpus.objects(id=c_id)[0]
+        arch = Anidados.objects(id=a_id)[0]
+        
+        if len(Tag.objects(id=t_id)) > 0:
+            tag = Tag.objects(id=t_id)[0]
+        else:
+            tag = Subtag.objects(id=t_id)[0]
+        
+        tags = tag.tags
+        subtags = Subtag.objects(corpus=mod,ptag=tag)
+        
+        d = {}
+        for etiqueta in tags:
+            d[etiqueta] = request.POST.get(etiqueta,False)
+
+
+        arch.tags = d
+        arch.save()
+ 
+        
+        return HttpResponse('<script type="text/javascript">window.close()</script>')
+
+
 
 
 @login_required(login_url='/login')
@@ -254,7 +346,7 @@ def borrar(request):
         m_id = eval("request." + request.method + "['m_id']")
         
         params = {'a_id': a_id, 'm_id': m_id}
-        temp = 'archivos/delete.html'/Users/sergiomancera/Proyectos/gestionmeta/corpus/views.py
+        temp = 'archivos/delete.html'
     
     elif request.method == 'POST':
         

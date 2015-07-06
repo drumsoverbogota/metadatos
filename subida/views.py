@@ -1,9 +1,10 @@
 from django.contrib.auth import *
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 from mongoengine.queryset import DoesNotExist
 from django.shortcuts import *
-from django.contrib.auth.decorators import login_required
 from subida.forms import UploadFileForm
-
 from corpus.models import *
 from archivos.models import *
 
@@ -79,7 +80,9 @@ def importar(request):
     if form.is_valid():
         f = request.FILES['file']
         nombre = request.POST['nombre']
-        print(f)
+        if nombre.strip() == '':
+            messages.add_message(request,messages.ERROR,u"Es necesario ingresar un nombre para el archivo")
+            return render_to_response('importar.html', {'form':form}, context_instance=RequestContext(request))
 
         folder = 'temp_'+request.user.username
 
@@ -87,6 +90,7 @@ def importar(request):
         archive.extractall(folder)
         return render_to_response('importar_b.html', {'lista':os.listdir(folder),'folder':folder,'nombre':nombre}, context_instance=RequestContext(request))
     form = UploadFileForm()
+    messages.add_message(request,messages.ERROR,u"Escoja un archivo para importar")
     return render_to_response('importar.html', {'form':form}, context_instance=RequestContext(request))
 
 def importar_b(request):

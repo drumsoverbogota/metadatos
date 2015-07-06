@@ -14,7 +14,7 @@
         {% csrf_token %}
         <input type="hidden" name="id_corp" value="{{id_corp}}">
         <input type="hidden" name="tag_id" value="{{tags}}">
-        <input type="submit" value="Delete">
+        <input type="submit" onclick="return confirm('¿Está seguro que desea borrar esta etiqueta?');" value="Delete">
     </form>
     </li>
     {% endfor %}
@@ -34,7 +34,7 @@
             <input type="hidden" name="id_corp" value="{{id_corp}}">
             <input type="hidden" name="tag_id" value="{{tags}}">
             <input type="hidden" name="isfile" value="True">
-            <input type="submit" value="Delete">
+            <input type="submit" onclick="return confirm('¿Está seguro que desea borrar esta etiqueta?');" value="Delete">
         </form>
         </li>
         {% endfor %}
@@ -51,7 +51,7 @@
             <input type="hidden" name="id_corp" value="{{id_corp}}">
             <input type="hidden" name="subtag" value="True">
             <input type="hidden" name="tag_id" value="{{tags.id}}">
-            <input type="submit" value="Delete">
+            <input type="submit" onclick="return confirm('¿Está seguro que desea borrar esta etiqueta?');" value="Delete">
         </form>
     </li>
     {% endfor %}
@@ -63,8 +63,7 @@
         <input type="hidden" name="id_corp" value="{{id_corp}}">
 
         <input type="text" name="tag" placeholder="tag" required>
-        <input type="checkbox" name="archivo" value="True">
-        Es archivo
+        <!--<input type="checkbox" name="archivo" value="True">Es archivo-->
         <input type="submit" value="Agregar etiqueta">
 
     </form>

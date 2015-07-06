@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block body_block %}
-    <h1>Blongo</h1>
+    <h1>Modelos de corpus</h1>
 
 
       <ul>
@@ -20,9 +20,10 @@
         <input type="hidden" name="id" value="{{ corp.id }}">
         <input type="submit" name="" value="Escoger etiqueta a mostrar">
       </form>
-      <form method="get" action="/corpus/delete">
+      <form method="post" action="/corpus/delete/">
+        {% csrf_token %}
         <input type="hidden" name="id" value="{{corp.id}}">
-        <input type="submit" value="Borrar">
+        <input type="submit" onclick="return confirm('¿Está seguro que desea borrar este Modelo de corpus?');" value="Borrar">
       </form>
  
       {% endfor %}

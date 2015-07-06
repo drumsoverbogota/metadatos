@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+m{% extends 'base.html' %}
 {% load staticfiles %}
 
 {% block body_block %}
@@ -33,7 +33,7 @@
             <form method="post" action="/login/delete_user/">
             {% csrf_token %}
             <input type="hidden" name="id_user" value="{{i}}">
-            <input type="submit" value="Borrar">
+            <input type="submit" onclick="return confirm('¿Está seguro que desea borrar este Usuario?');" value="Borrar">
 
             </form>
             <br>

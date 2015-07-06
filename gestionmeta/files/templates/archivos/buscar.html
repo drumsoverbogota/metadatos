@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+
+
+
+
+    <h1>Blongo</h1>
+
+
+      <br>
+    <form method="post" name="classic" action="/archivos/resultados/">
+        {% csrf_token %}
+        <select name="main" onChange="update(this.selectedIndex)">
+        <option value={{mod.id}}>{{mod.n_tag}}</option>
+      {% for t in tags %}
+        <option value={{t.id}}>{{t.nombre}}</option>
+      {% endfor %}
+      {% for t in stags %}
+        <option value={{t.id}}>{{t.nombre}}</option>
+      {% endfor %}
+      </select>
+        
+        <select name="tags">
+        </select>
+        <input type="hidden" name="m_id" value="{{ mod.id }}">
+        <input type="text" name="busq" value="">
+        <input type="submit" name="" value="Buscar">
+    </form>
+          <a href="/">Volver atrás</a>
+
+
+
+<script type="text/javascript">
+    
+    var main = document.classic.main
+    var tags = document.classic.tags
+    
+    
+    var form=new Array()
+    form[0]=["{% for t in mod.tags %}{{t}}|{{t}}{% if not forloop.last %}","{% endif %}{% endfor %}"]
+    {% for t in tags %}
+    form[{{forloop.counter}}] = ["{% for x in t.tags %}{{x}}|{{x}}{% if not forloop.last %}","{% endif %}{% endfor %}"]
+    
+    {% endfor %}
+    {% for t in stags %}
+    form[{{forloop.counter|add:tags.count}}] = ["{% for x in t.tags %}{{x}}|{{x}}{% if not forloop.last %}","{% endif %}{% endfor %}"]
+    
+    {% endfor %}
+    
+    function update(selectedmain){
+        tags.options.length=0
+        
+        for (i=0; i<form[selectedmain].length; i++)
+        tags.options[tags.options.length]=new Option(form[selectedmain][i].split("|")[0], form[selectedmain][i].split("|")[1])
+        
+    }
+    update(0)
+
+    </script>
+
+
+{% endblock %}
