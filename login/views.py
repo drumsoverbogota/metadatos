@@ -56,12 +56,11 @@ def login(request):
             print(login(request, user))
             return redirect('index')
         else:
-            #print "malament"
-            messages.add_message(request,messages.ERROR,u"Incorrect login name or password !")
-            print('Test B')
+            messages.add_message(request,messages.ERROR,u"¡Password incorrecto! Por favor introduzca el password correcto")
+
     except DoesNotExist:
-        messages.add_message(request,messages.ERROR,u"Incorrect login name or password !")
-        print('Test C')
+        messages.add_message(request,messages.ERROR,u"¡El usuario no existe! Por favor intente con otro")
+
     template = 'login/index.html'
     return render_to_response(template,{},context_instance=RequestContext(request))
 

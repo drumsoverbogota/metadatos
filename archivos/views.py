@@ -219,6 +219,36 @@ def add_s(request):
     return render_to_response('archivos/listar.html', params,
                               context_instance=RequestContext(request))
 
+@login_required(login_url='/login')
+def delete_s(request):
+    
+    id   = request.POST['m_id']
+    a_id = request.POST['a_id']
+    s_id = request.POST['s_id']
+    t_id = request.POST['t_id']
+    
+    mod = ModeloCorpus.objects(id=id)[0]
+    subtag = Tag.objects(id=t_id)[0]
+    sesion = Sesiones.objects(id=s_id)[0]
+    anidado = Anidados.objects(id=a_id)[0]
+    
+    tags = subtag.tags
+    tags_f = subtag.tags_f
+    
+
+    sesion.refa[subtag.nombre].remove(anidado.id)
+    
+    
+    sesion.save()
+    
+    sesiones = Sesiones.objects(corpus=mod)
+    subtags = Tag.objects(corpus=mod)
+    anidados = Anidados.objects(corpus=mod)
+    tags = mod.tags
+    tags_f = mod.tags_f
+    params = {'m_id' : id , 'sesiones': sesiones,'anidados':anidados, 'tags': tags, 'tagsf': tags_f, 's_tags': subtags }
+    return render_to_response('archivos/listar.html', params,
+                              context_instance=RequestContext(request))
 
 
 @login_required(login_url='/login')

@@ -2,7 +2,10 @@ from django.shortcuts import render_to_response,redirect,render
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from mongoengine import *
+
 from corpus.models import *
+from archivos.models import *
+
 from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login')
@@ -176,8 +179,19 @@ def delete(request):
     id = eval("request." + request.method + "['id']")
     if request.method == 'POST':
         corp = ModeloCorpus.objects(id=id)[0]
+        
         tags_c = Tag.objects(corpus=corp)
         tags_c.delete()
+        
+        stags_c = Subtag.objects(corpus=corp)
+        stags_c.delete()
+        
+        sesi = Sesiones.objects(corpus=corp)
+        andi = Anidados.objects(corpus=corp)
+        
+        sesi.delete()
+        andi.delete()
+        
         corp.delete()
         template = 'corpus/index.html'
         params = {'Corpus': ModeloCorpus.objects}
